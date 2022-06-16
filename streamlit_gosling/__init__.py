@@ -42,3 +42,26 @@ def streamlit_gosling(id, spec, height = 400, key=None):
 
     return component_value
 
+if not _RELEASE:
+    import streamlit as st
+    import gosling as gos
+
+    st.write('DEV MODE')
+
+    size = 500
+    data = gos.matrix("https://server.gosling-lang.org/api/v1/tileset_info/?d=leung2015-hg38")
+    # data = gos.matrix('/path/to/dataset.cool') # local dataset
+
+    @st.cache
+    def goschart():
+        chart = gos.Track(data).mark_bar().encode(
+        x=gos.X("xs:G", axis="bottom"),
+        xe="xe:G",
+        y=gos.Y("ys:G", axis="left"),
+        ye="ye:G",
+        color=gos.Color("value:Q", range="hot", legend=True),
+        ).properties(width=size, height=size).view()
+
+        return chart
+
+    streamlit_gosling(spec=goschart(), id='id', height=size*1.5)

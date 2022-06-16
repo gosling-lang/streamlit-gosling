@@ -5,9 +5,6 @@ import setuptools
 
 def readme() -> str:
     """Utility function to read the README file.
-    Used for the long_description.  It's nice, because now 1) we have a top
-    level README file and 2) it's easier to type in the README file than to put
-    a raw string in below.
     :return: content of README.md
     """
     return open(join(dirname(__file__), "README.md")).read()
@@ -15,7 +12,7 @@ def readme() -> str:
 
 setuptools.setup(
     name="streamlit-gosling",
-    version="0.1.1",
+    version="0.1.0",
     author="Qianwen Wang",
     author_email="qianwen.april.wang@gmail.com",
     description="Gosling custom component for Streamlit",
@@ -25,7 +22,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     include_package_data=True,
     classifiers=[],
-    python_requires=">=3.6",
+    python_requires=">=3.7",
     install_requires=[
         "streamlit >= 0.63",
         "gosling >= 0.0.8"

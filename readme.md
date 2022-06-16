@@ -16,14 +16,17 @@ pip install streamlit-gosling
 
 
 ```python
+import streamlit as st
 import gosling as gos
-from streamlit_gosling import st_gos
+from streamlit_gosling import streamlit_gosling as st_gos
 
-# create a matrix visualization
 size = 500
 data = gos.matrix("https://server.gosling-lang.org/api/v1/tileset_info/?d=leung2015-hg38")
+# data = gos.matrix('/path/to/dataset.cool') # local dataset
 
-chart = gos.Track(data).mark_bar().encode(
+@st.cache
+def chart():
+    return gos.Track(data).mark_bar().encode(
     x=gos.X("xs:G", axis="bottom"),
     xe="xe:G",
     y=gos.Y("ys:G", axis="left"),
@@ -31,8 +34,8 @@ chart = gos.Track(data).mark_bar().encode(
     color=gos.Color("value:Q", range="hot", legend=True),
     ).properties(width=size, height=size).view()
 
+st_gos(spec=chart(), id='id', height=size+ 100)
 
-st_gos('id', chart.to_json(), height=size)
 ```
 
 ## API
