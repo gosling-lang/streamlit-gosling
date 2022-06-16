@@ -1,5 +1,6 @@
 import os
 import streamlit.components.v1 as components
+import gosling as gos
 
 # False while we're developing
 # the component, and True when we're ready to package and distribute it.
@@ -24,7 +25,7 @@ else:
 # `declare_component` and call it done. The wrapper allows us to customize
 # our component's API: we can pre-process its input args, post-process its
 # output value, and add a docstring for users.
-def my_component(id, spec, key=None):
+def my_component(id, spec, height = 400, key=None):
     """Create a new instance of "my_component".
 
     Parameters
@@ -51,7 +52,7 @@ def my_component(id, spec, key=None):
     #
     # "default" is a special argument that specifies the initial return
     # value of the component before the user has interacted with it.
-    component_value = _component_func(id=id, spec=spec, key=key, default=0)
+    component_value = _component_func(id=id, spec=spec, height=height, key=key, default='')
 
     # We could modify the value returned from the component if we wanted.
     # There's no need to do this in our simple example - but it's an option.
@@ -63,8 +64,20 @@ def my_component(id, spec, key=None):
 # app: `$ streamlit run my_component/__init__.py`
 if not _RELEASE:
     import streamlit as st
+    st.markdown('test')
 
-    st.subheader("test")
+    size = 500
+    data = gos.matrix("https://server.gosling-lang.org/api/v1/tileset_info/?d=leung2015-hg38")
+    # data = gos.matrix('/path/to/dataset.cool') # local dataset
 
-    a = my_component('id', {})
-    st.write(a)
+    chart = gos.Track(data).mark_bar().encode(
+        x=gos.X("xs:G", axis="bottom"),
+        xe="xe:G",
+        y=gos.Y("ys:G", axis="left"),
+        ye="ye:G",
+        color=gos.Color("value:Q", range="hot", legend=True),
+        ).properties(width=size, height=size).view()
+
+
+
+    my_component('id', chart.to_json(), height=800)

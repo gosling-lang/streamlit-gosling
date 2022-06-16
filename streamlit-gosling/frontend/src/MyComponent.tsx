@@ -10,7 +10,8 @@ import { GoslingComponent, GoslingSpec } from 'gosling.js';
 
 interface Props {
   id: string
-  spec: GoslingSpec,
+  spec: string,
+  height: number
 }
 
 /**
@@ -18,33 +19,18 @@ interface Props {
  * automatically when your component should be re-rendered.
  */
 const MyComponent = (props: ComponentProps) => {
-  const { id, spec }: Props = props.args
+  const { id, spec, height }: Props = props.args
 
   // otherwise, the height of iframe is 0
-  useEffect(() => Streamlit.setFrameHeight(400));
+  useEffect(() => {
+    Streamlit.setFrameHeight(height)
+  });
 
 
-  return (<div >
-    <h3>{id}</h3>
+  return (
     <GoslingComponent
       // Gosling specification
-      spec={{
-        tracks: [{
-          data: {
-            url: "https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec",
-            type: "multivec",
-            row: "sample",
-            column: "position",
-            value: "peak",
-            categories: ["sample 1"]
-          },
-          "mark": "rect",
-          "x": { "field": "position", "type": "genomic" },
-          "color": { "field": "peak", "type": "quantitative", "legend": true },
-          "width": 600,
-          "height": 130
-        }]
-      }}
+      spec={JSON.parse(spec)}
       // Styles of Gosling Component
       margin={0}
       padding={30}
@@ -54,7 +40,6 @@ const MyComponent = (props: ComponentProps) => {
       // Styling theme (refer to https://github.com/gosling-lang/gosling-theme)
       theme={'light'}
     />
-  </div>
   )
 }
 
