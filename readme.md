@@ -1,7 +1,5 @@
 # Streamlit - Gosling
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)]()
-
 A Streamlit component to display [Genomic Visualization using Gosling](http://gosling-lang.org).
 
 
@@ -11,11 +9,18 @@ A Streamlit component to display [Genomic Visualization using Gosling](http://go
 pip install streamlit-gosling
 ```
 
+also need to install its dependencies `gosling` and `streamlit`
+```
+pip install gosling
+pip install streamlit
+```
+
+
 ## Usage
-
-
+Create a python file as below, then run it using `streamlit run app.py`.
 
 ```python
+# app.py
 import streamlit as st
 import gosling as gos
 from streamlit_gosling import streamlit_gosling as st_gos
