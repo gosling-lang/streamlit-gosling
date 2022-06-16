@@ -8,7 +8,7 @@ _RELEASE = False
 
 if not _RELEASE:
     _component_func = components.declare_component(
-        "my_component",
+        "streamlit_gosling",
         url="http://localhost:3001",
     )
 else:
@@ -17,7 +17,7 @@ else:
     # build directory:
     parent_dir = os.path.dirname(os.path.abspath(__file__))
     build_dir = os.path.join(parent_dir, "frontend/build")
-    _component_func = components.declare_component("my_component", path=build_dir)
+    _component_func = components.declare_component("streamlit_gosling", path=build_dir)
 
 
 # Create a wrapper function for the component. This is an optional
@@ -25,8 +25,8 @@ else:
 # `declare_component` and call it done. The wrapper allows us to customize
 # our component's API: we can pre-process its input args, post-process its
 # output value, and add a docstring for users.
-def my_component(id, spec, height = 400, key=None):
-    """Create a new instance of "my_component".
+def streamlit_gosling(id, spec, height = 400, key=None):
+    """Create a new instance of "streamlit_gosling".
 
     Parameters
     ----------
@@ -61,7 +61,7 @@ def my_component(id, spec, height = 400, key=None):
 
 # Add some test code to play with the component while it's in development.
 # During development, we can run this just as we would any other Streamlit
-# app: `$ streamlit run my_component/__init__.py`
+# app: `$ streamlit run streamlit_gosling/__init__.py`
 if not _RELEASE:
     import streamlit as st
     st.markdown('test')
@@ -80,4 +80,4 @@ if not _RELEASE:
 
 
 
-    my_component('id', chart.to_json(), height=800)
+    streamlit_gosling('id', chart.to_json(), height=800)
