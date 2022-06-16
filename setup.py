@@ -15,7 +15,7 @@ def readme() -> str:
 
 setuptools.setup(
     name="streamlit-gosling",
-    version="0.1.0",
+    version="0.1.1",
     author="Qianwen Wang",
     author_email="qianwen.april.wang@gmail.com",
     description="Gosling custom component for Streamlit",

@@ -4,7 +4,7 @@ import gosling as gos
 
 # False while we're developing
 # the component, and True when we're ready to package and distribute it.
-_RELEASE = False
+_RELEASE = True
 
 if not _RELEASE:
     _component_func = components.declare_component(
@@ -30,54 +30,15 @@ def streamlit_gosling(id, spec, height = 400, key=None):
 
     Parameters
     ----------
-    name: str
-        The name of the thing we're saying hello to. The component will display
-        the text "Hello, {name}!"
-    key: str or None
-        An optional key that uniquely identifies this component. If this is
-        None, and the component's arguments are changed, the component will
-        be re-mounted in the Streamlit frontend and lose its current state.
-
-    Returns
-    -------
-    int
-        The number of times the component's "Click Me" button has been clicked.
-        (This is the value passed to `Streamlit.setComponentValue` on the
-        frontend.)
+    id: str
+        id of the gosling visualization
+    height: int
+    spec: a gosling visualization object, created using gos
 
     """
-    # Call through to our private component function. Arguments we pass here
-    # will be sent to the frontend, where they'll be available in an "args"
-    # dictionary.
-    #
-    # "default" is a special argument that specifies the initial return
-    # value of the component before the user has interacted with it.
-    component_value = _component_func(id=id, spec=spec, height=height, key=key, default='')
+   
+    #  do not need a return value in our case, so set default to ''
+    component_value = _component_func(id=id, spec=spec.to_json(), height=height, key=key, default='')
 
-    # We could modify the value returned from the component if we wanted.
-    # There's no need to do this in our simple example - but it's an option.
     return component_value
 
-
-# Add some test code to play with the component while it's in development.
-# During development, we can run this just as we would any other Streamlit
-# app: `$ streamlit run streamlit_gosling/__init__.py`
-if not _RELEASE:
-    import streamlit as st
-    st.markdown('test')
-
-    size = 500
-    data = gos.matrix("https://server.gosling-lang.org/api/v1/tileset_info/?d=leung2015-hg38")
-    # data = gos.matrix('/path/to/dataset.cool') # local dataset
-
-    chart = gos.Track(data).mark_bar().encode(
-        x=gos.X("xs:G", axis="bottom"),
-        xe="xe:G",
-        y=gos.Y("ys:G", axis="left"),
-        ye="ye:G",
-        color=gos.Color("value:Q", range="hot", legend=True),
-        ).properties(width=size, height=size).view()
-
-
-
-    streamlit_gosling('id', chart.to_json(), height=800)
