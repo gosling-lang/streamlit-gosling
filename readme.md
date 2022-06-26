@@ -95,3 +95,26 @@ git clone https://github.com/andfanilo/streamlit-echarts-demo
 cd streamlit-echarts-demo/
 streamlit run app.py
 ```
+
+## Static HTML file
+If you only need static rendering of frontend code (HTML/CSS/JS), with no communication from HTML back to Streamlit, then you may not need `streamlit-gosling` and `components.html` will be the easiest way.
+```python
+import gosling as gos
+import streamlit.components.v1
+
+import urllib.request as urllib
+import json
+
+URL = "https://gist.githubusercontent.com/sehilyi/54eaeecd2f07203a707e1516b1cf8e60/raw/d7728224b475a87604f97ba5522e1501edc2565a/gosling.js"
+
+def load_schema():
+    with urllib.urlopen(urllib.Request(URL)) as response:
+        raw = response.read()
+        conf = json.loads(raw)
+    return conf
+
+if __name__ == "__main__":
+    schema = load_schema()
+    html = gos.View(**schema)._repr_mimebundle_()['text/html']
+    streamlit.components.v1.html(html, width=800, height=300)
+```
