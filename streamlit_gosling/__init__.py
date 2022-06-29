@@ -4,7 +4,7 @@ import gosling as gos
 
 # False while we're developing
 # the component, and True when we're ready to package and distribute it.
-_RELEASE = True
+_RELEASE = False
 
 if not _RELEASE:
     _component_func = components.declare_component(
@@ -48,20 +48,34 @@ if not _RELEASE:
 
     st.write('DEV MODE')
 
-    size = 500
-    data = gos.matrix("https://server.gosling-lang.org/api/v1/tileset_info/?d=leung2015-hg38")
     # data = gos.matrix('/path/to/dataset.cool') # local dataset
 
     @st.cache
-    def goschart():
-        chart = gos.Track(data).mark_bar().encode(
-        x=gos.X("xs:G", axis="bottom"),
-        xe="xe:G",
-        y=gos.Y("ys:G", axis="left"),
-        ye="ye:G",
-        color=gos.Color("value:Q", range="hot", legend=True),
-        ).properties(width=size, height=size).view()
+    def point_chart():
+        data = gos.multivec(
+            url="https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ",
+            row="sample",
+            column="position",
+            value="peak",
+            categories=["sample 1","sample 2", "sample 3", "sample 4"],
+            binSize=5,
+        )
+
+        domain = gos.GenomicDomain(chromosome="1")
+
+        track = gos.Track(data).mark_point().encode(
+            x=gos.X("position:G", domain=domain, axis="top"),
+            y="peak:Q",
+            size="peak:Q",
+            color="sample:N",
+        ).properties(layout="linear", width=725, height=180, id='track-1')
+
+        chart = track.view(title="Point", subtitle="Tutorial Examples")
 
         return chart
 
-    streamlit_gosling(spec=goschart(), id='id', height=size*1.5)
+
+
+    result = streamlit_gosling(spec=point_chart(), id='id', height=250)
+
+    st.write(result)

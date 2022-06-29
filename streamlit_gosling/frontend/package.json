@@ -10,6 +10,7 @@
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
+    "gosling.js": "^0.9.18",
     "higlass": "^1.11.11",
     "pixi.js": "6.0.4",
     "react": "^16.13.1",
@@ -43,8 +44,5 @@
       "last 1 safari version"
     ]
   },
-  "homepage": ".",
-  "devDependencies": {
-    "gosling.js": "^0.9.0"
-  }
+  "homepage": "."
 }
