@@ -1,6 +1,5 @@
 from json import tool
 import os
-from tkinter import EventType
 
 import streamlit.components.v1 as components
 import gosling as gos
