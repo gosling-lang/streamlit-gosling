@@ -1,11 +1,8 @@
-from json import tool
 import os
 
 import streamlit.components.v1 as components
 import gosling as gos
 
-import json
-import pandas as pd
 
 # False while we're developing
 # the component, and True when we're ready to package and distribute it.
