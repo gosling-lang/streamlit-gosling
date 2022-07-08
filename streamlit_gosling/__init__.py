@@ -10,7 +10,7 @@ import pandas as pd
 
 # False while we're developing
 # the component, and True when we're ready to package and distribute it.
-_RELEASE = False
+_RELEASE = True
 
 if not _RELEASE:
     _component_func = components.declare_component(
