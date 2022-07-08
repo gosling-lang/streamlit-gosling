@@ -8,10 +8,10 @@ echo '3. publish to Test PyPi'
 echo 'yes or no'
 read ans
 
-# # build front end 
-# cd streamlit_gosling/frontend
-# npm run build
-# cd ../../
+# build front end 
+cd streamlit_gosling/frontend
+npm run build
+cd ../../
 
 # create wheel from the source code
 rm -r dist/
