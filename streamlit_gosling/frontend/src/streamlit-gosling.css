@@ -1,0 +1,35 @@
+.export-meun {
+    position: absolute;
+    top: 30px;
+    right: 10px;
+    display: inline-block;
+    padding: 2px 5px;
+    width: 50px;
+    background-color: white;
+    border-radius: 5%;
+    text-align: center;
+    border: 1px solid gray;
+}
+
+.export-meun .sub-meun {
+    visibility: hidden;
+   
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+}
+
+.export-meun .sub-meun button{
+    width:  50px;
+    background-color: white;
+    border-radius: 0%;
+    border: 1px solid gray;
+}
+
+.export-meun:hover .sub-meun {
+    visibility: visible;
+}
