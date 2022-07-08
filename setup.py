@@ -12,7 +12,7 @@ def readme() -> str:
 
 setuptools.setup(
     name="streamlit-gosling",
-    version="0.1.0",
+    version="0.1.1",
     author="Qianwen Wang",
     author_email="qianwen.april.wang@gmail.com",
     description="Gosling custom component for Streamlit",
@@ -25,6 +25,6 @@ setuptools.setup(
     python_requires=">=3.7",
     install_requires=[
         "streamlit >= 0.63",
-        "gosling >= 0.0.8"
+        "gosling >= 0.0.9"
     ]
 )
