@@ -1,6 +1,12 @@
+from json import tool
 import os
+from tkinter import EventType
+
 import streamlit.components.v1 as components
 import gosling as gos
+
+import json
+import pandas as pd
 
 # False while we're developing
 # the component, and True when we're ready to package and distribute it.
@@ -25,7 +31,7 @@ else:
 # `declare_component` and call it done. The wrapper allows us to customize
 # our component's API: we can pre-process its input args, post-process its
 # output value, and add a docstring for users.
-def streamlit_gosling(id, spec, height = 400, key=None):
+def streamlit_gosling(id, spec, height = 400, eventType=None, key='gos', exportButton=True):
     """Create a new instance of "streamlit_gosling".
 
     Parameters
@@ -38,7 +44,7 @@ def streamlit_gosling(id, spec, height = 400, key=None):
     """
    
     #  do not need a return value in our case, so set default to ''
-    component_value = _component_func(id=id, spec=spec.to_json(), height=height, key=key, default='')
+    component_value = _component_func(id=id, spec=spec.to_json(), height=height, key=key, eventType=eventType, default='', exportButton = exportButton)
 
     return component_value
 
@@ -46,12 +52,10 @@ if not _RELEASE:
     import streamlit as st
     import gosling as gos
 
-    st.write('DEV MODE')
-
     # data = gos.matrix('/path/to/dataset.cool') # local dataset
 
     @st.cache
-    def point_chart():
+    def point_chart(chr='1'):
         data = gos.multivec(
             url="https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ",
             row="sample",
@@ -61,21 +65,35 @@ if not _RELEASE:
             binSize=5,
         )
 
-        domain = gos.GenomicDomain(chromosome="1")
+        domain = gos.GenomicDomain(chromosome=chr)
 
         track = gos.Track(data).mark_point().encode(
             x=gos.X("position:G", domain=domain, axis="top"),
             y="peak:Q",
             size="peak:Q",
-            color="sample:N",
-        ).properties(layout="linear", width=725, height=180, id='track-1')
+            color=gos.Color("sample:N", legend=True),
+            tooltip=[
+                gos.Tooltip(field='position', type='genomic'),
+                gos.Tooltip(field='peak', type='quantitative', alt='value', format='.2'),
+                gos.Tooltip(field='sample', type='nominal')
+            ],
+        ).properties(
+            layout="linear", width=650, height=200, id='track-1',  experimental={"mouseEvents": True}
+        )
 
-        chart = track.view(title="Point", subtitle="Tutorial Examples")
+        chart = track.view(title='click to select an item')
 
         return chart
 
+    chr = st.selectbox(
+     'Select a chromosome', [str(i) for i in range(1, 20)]
+     )
+    
+    eventType='rangeSelect'
+    
+    result = streamlit_gosling(spec=point_chart(chr), id='id', height=350, eventType= eventType)
 
-
-    result = streamlit_gosling(spec=point_chart(), id='id', height=250)
-
-    st.write(result)
+    
+    if result:
+        st.write('Below is a streamlit component')
+        st.write(eventType, result)
