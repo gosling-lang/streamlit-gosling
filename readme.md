@@ -2,7 +2,7 @@
 
 A Streamlit component to display [Genomic Visualization using Gosling](http://gosling-lang.org).
 
-<img alt="https://user-images.githubusercontent.com/9922882/109852545-e05f3400-7c22-11eb-90f3-7371e4ddeb42.png" src="https://user-images.githubusercontent.com/9922882/109852545-e05f3400-7c22-11eb-90f3-7371e4ddeb42.png">
+<img src="./assets/demo.gif">
 
 An online demo is host at [Streamlit Clound](https://wangqianwen0418-streamlit-gosling-demo-st-gos-demo-zo60pz.streamlitapp.com/).  
 Checkout the [code of the demo](wangqianwen0418/streamlit-gosling-demo/main/st_gos_demo.py)
