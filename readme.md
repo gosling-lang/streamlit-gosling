@@ -23,6 +23,12 @@ pip install streamlit
 
 ## Usage
 
+This library provides 2 functions to display gosling visualization :
+
+- `from_gos` to display visualization created by from a gosling instances
+- `from_json` to display visualization from Golsing JSON spec (in the form Python dict)
+
+### using `from_gos`
 ```python
 
 import streamlit as st
@@ -51,6 +57,44 @@ st_gos.from_gos(
     height=size+ 100
 )
 ```
+
+### using `from_json`
+```python
+import streamlit_gosling as st_gos
+
+spc = {
+  "title": "Basic Marks: bar",
+  "subtitle": "Tutorial Examples",
+  "tracks": [
+    {
+      "layout": "linear",
+      "width": 800,
+      "height": 180,
+      "data": {
+        "url": "https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ",
+        "type": "multivec",
+        "row": "sample",
+        "column": "position",
+        "value": "peak",
+        "categories": ["sample 1"],
+        "binSize": 5
+      },
+      "mark": "bar",
+      "x": {"field": "start", "type": "genomic", "axis": "bottom"},
+      "xe": {"field": "end", "type": "genomic"},
+      "y": {"field": "peak", "type": "quantitative", "axis": "right"},
+      "size": {"value": 5}
+    }
+  ]
+}
+
+st_gos.from_gos(
+    spec=spec, 
+    id='id', 
+    height=size+ 100
+)
+```
+
 [docs of gosling python package](https://gosling-lang.github.io/gos)  
 [docs of streamlit](https://docs.streamlit.io/)
 
@@ -80,7 +124,7 @@ from_json(id: string,
 - **spec**: a visualization object created using Gosling or a gosling JSON spec as python dicts
 - **height**: `number`
 - **eventType**: `string`, one of 'mouseOver', 'click', and 'rangeSelect'. If specified, the event data of the specified mouse event will be returned by the streamlit-gosling component.
-- **api**: `dict`. Call an api function of the gosling visualization. 
+- **api**: ``. Call an api function of the gosling visualization. 
   Three types of api actions are currently supported. 
   ```
   { action: "zoomTo", viewId: string, position: string, padding?: number, duration?: number }
@@ -147,7 +191,7 @@ cd streamlit-echarts-demo/
 streamlit run app.py
 ```
 
-## Static HTML file
+<!-- ## Static HTML file
 If you only need static rendering of gosling, with no communication from Gosling back to Streamlit, then you may not need `streamlit-gosling`.
 Using  `components.html` will be the easiest way.
 ```python
@@ -169,4 +213,4 @@ if __name__ == "__main__":
     schema = load_schema()
     html = gos.View(**schema)._repr_mimebundle_()['text/html']
     streamlit.components.v1.html(html, width=800, height=300)
-```
+``` -->
