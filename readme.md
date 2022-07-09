@@ -62,7 +62,7 @@ st_gos.from_gos(
 ```python
 import streamlit_gosling as st_gos
 
-spc = {
+spec = {
   "title": "Basic Marks: bar",
   "subtitle": "Tutorial Examples",
   "tracks": [

@@ -1,7 +1,9 @@
 import os
+import json
 
 import streamlit.components.v1 as components
 import gosling as gos
+
 
 
 # False while we're developing
@@ -29,7 +31,7 @@ else:
 # `declare_component` and call it done. The wrapper allows us to customize
 # our component's API: we can pre-process its input args, post-process its
 # output value, and add a docstring for users.
-def from_gos(id, spec, api=None, height=400, eventType=None, key='gos', exportButton=True):
+def from_gos(id, spec, api=None, height=400, eventType=None, exportButton=True):
     """Create a new instance of "streamlit_gosling".
 
     Parameters
@@ -43,11 +45,11 @@ def from_gos(id, spec, api=None, height=400, eventType=None, key='gos', exportBu
 
     #  do not need a return value in our case, so set default to ''
     component_value = _component_func(id=id, spec=spec.to_json(
-    ), height=height, key=key, eventType=eventType, gosAPI=api, default=None, exportButton=exportButton)
+    ), height=height, key=id, eventType=eventType, gosAPI=api, default=None, exportButton=exportButton)
 
     return component_value
 
-def from_json(id, spec, api=None, height=400, eventType=None, key='gos', exportButton=True):
+def from_json(id, spec, api=None, height=400, eventType=None, exportButton=True):
     """Create a new instance of "streamlit_gosling".
 
     Parameters
@@ -60,7 +62,7 @@ def from_json(id, spec, api=None, height=400, eventType=None, key='gos', exportB
     """
 
     #  do not need a return value in our case, so set default to ''
-    component_value = _component_func(id=id, spec=spec, height=height, key=key, eventType=eventType, gosAPI=api, default=None, exportButton=exportButton)
+    component_value = _component_func(id=id, spec=json.dumps(spec), height=height, key=id, eventType=eventType, gosAPI=api, default=None, exportButton=exportButton)
 
     return component_value
 
@@ -132,3 +134,35 @@ if not _RELEASE:
 
     with col1:
         st.write(f'you {eventType}:', result)
+
+
+       
+    spec = {
+            "title": "Basic Marks: bar",
+            "subtitle": "Tutorial Examples",
+            "tracks": [
+                {
+                "layout": "linear",
+                "width": 800,
+                "height": 180,
+                "data": {
+                    "url": "https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ",
+                    "type": "multivec",
+                    "row": "sample",
+                    "column": "position",
+                    "value": "peak",
+                    "categories": ["sample 1"],
+                    "binSize": 5
+                },
+                "mark": "bar",
+                "x": {"field": "start", "type": "genomic", "axis": "bottom"},
+                "xe": {"field": "end", "type": "genomic"},
+                "y": {"field": "peak", "type": "quantitative", "axis": "right"},
+                "size": {"value": 5}
+                }
+            ]
+        }
+    from_json(id = 'id2', spec = spec, height=350)
+    st.code(json.dumps(spec, indent=2), language='json')
+
+    
