@@ -1,7 +1,7 @@
 .export-meun {
     position: absolute;
-    top: 30px;
-    right: 10px;
+    bottom: 0px;
+    left: 30px;
     display: inline-block;
     padding: 2px 5px;
     width: 50px;

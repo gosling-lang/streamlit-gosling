@@ -6,7 +6,6 @@ import {
 import React, { useRef, useEffect } from "react"
 
 import { GoslingComponent} from 'gosling.js';
-import { GoslingApi } from 'gosling.js/dist/src/core/api';
 import {GoslingRef} from 'gosling.js/dist/src/core/gosling-component';
 
 import './streamlit-gosling.css'
@@ -16,6 +15,7 @@ type GosAPI = {
   zoomToExtent?: {viewId: string, duration?: number},
   zoomToGene?: {viewId: string, gene: string, padding?: number, duration?: number}
 }
+
 interface Props {
   id: string
   spec: string,

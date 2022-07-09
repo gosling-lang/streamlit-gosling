@@ -41,7 +41,7 @@ def streamlit_gosling(id, spec, api={}, height = 400, eventType=None, key='gos',
     """
    
     #  do not need a return value in our case, so set default to ''
-    component_value = _component_func(id=id, spec=spec.to_json(), height=height, key=key, eventType=eventType, gosAPI=api, default='', exportButton = exportButton)
+    component_value = _component_func(id=id, spec=spec.to_json(), height=height, key=key, eventType=eventType, gosAPI=api, default=None, exportButton = exportButton)
 
     return component_value
 
@@ -50,6 +50,9 @@ if not _RELEASE:
     import gosling as gos
 
     # data = gos.matrix('/path/to/dataset.cool') # local dataset
+    st.set_page_config(layout="wide")
+    st.header('Streamlit-Gosling')
+    col1, col2 = st.columns([1, 3])
 
     @st.cache
     def point_chart(chr='1', chartType='point chart'):
@@ -88,19 +91,22 @@ if not _RELEASE:
 
         return chart
 
-    chartType = st.selectbox(
-     'Select a chart', ['point plot', 'bar chart', 'area chart']
-     )
+    with col1:
 
-    chr = st.selectbox(
-     'zoom to chromosome', [str(i) for i in range(1, 20)]
-     )
+        chartType = st.selectbox(
+        'Select a chart', ['point plot', 'bar chart', 'area chart']
+        )
+
+        chr = st.selectbox(
+        'zoom to chromosome', [str(i) for i in range(1, 20)]
+        )
     
     eventType='click'
     api={'zoomTo': {'viewId': 'track-1', 'position': f'chr{chr}'}}
-    
-    result = streamlit_gosling(spec=point_chart(chartType=chartType), id='id', height=350, eventType= eventType, api=api)
 
+    with col2: 
     
-    if result:
+        result = streamlit_gosling(spec=point_chart(chartType=chartType), id='id', height=350, eventType= eventType, api=api)
+
+    with col1:
         st.write(f'you {eventType}:', result)
