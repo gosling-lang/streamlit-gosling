@@ -45,7 +45,11 @@ def chart():
     ).properties(width=size, height=size).view()
 
 # wrap gosling visualization as a streamlit component
-st_gos(spec=chart(), id='id', height=size+ 100)
+st_gos(
+    spec=chart(), 
+    id='id', 
+    height=size+ 100
+)
 ```
 [docs of gosling python package](https://gosling-lang.github.io/gos)  
 [docs of streamlit](https://docs.streamlit.io/)
@@ -55,14 +59,44 @@ st_gos(spec=chart(), id='id', height=size+ 100)
 ### st_echarts API
 
 ```
-st_gos(
-    id: string,
+st_gos(id: string,
     spec: a gosling visualization object
     height: number,
-    eventType?: 'mouseOver' | 'click' | 'rangeSelect'
+    eventType?: 'mouseOver' | 'click' | 'rangeSelect',
+    api?
 )
 ```
 
+- **id**: `string`
+- **spec**: a visualization object created using Gosling
+- **height**: `number`
+- **eventType**: `string`, one of 'mouseOver', 'click', and 'rangeSelect'. If specified, the event data of the specified mouse event will be returned by the streamlit-gosling component.
+- **api**: `object`. Call an api function of the gosling visualization. 
+  Three types of api actions are currently supported. 
+  ```
+  { action: "zoomTo", viewId: string, position: string, padding?: number, duration?: number }
+
+  { action: "zoomToExtent", viewId: string, duration?: number}
+    
+  { action: "zoomToGene", viewId: string, gene: string, padding?: number, duration?: number }
+  
+  ```
+  example
+  ```python
+  import streamlit as st
+  from streamlit_gosling import streamlit_gosling as st_gos
+  
+  # user select a chromosome using streamlit select box
+  chr = st.select('zoom to a chromosome', [str(i) for i in range(1, 20)])
+
+  # the visaulization will zoom to different chromosome based on users' selection
+  st_gos(
+      spec=/****/, 
+      id='id', 
+      height=350, 
+      api={'action': 'zoomTo','viewId': 'track-1', 'position': f'chr{chr}'}
+    )
+  ```
 
 ## Development
 
