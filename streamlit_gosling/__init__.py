@@ -6,8 +6,8 @@ import gosling as gos
 
 # False while we're developing
 # the component, and True when we're ready to package and distribute it.
-# _RELEASE = True
-_RELEASE = False
+_RELEASE = True
+# _RELEASE = False
 
 if not _RELEASE:
     _component_func = components.declare_component(
@@ -44,6 +44,23 @@ def from_gos(id, spec, api=None, height=400, eventType=None, key='gos', exportBu
     #  do not need a return value in our case, so set default to ''
     component_value = _component_func(id=id, spec=spec.to_json(
     ), height=height, key=key, eventType=eventType, gosAPI=api, default=None, exportButton=exportButton)
+
+    return component_value
+
+def from_json(id, spec, api=None, height=400, eventType=None, key='gos', exportButton=True):
+    """Create a new instance of "streamlit_gosling".
+
+    Parameters
+    ----------
+    id: str
+        id of the gosling visualization
+    height: int
+    spec: a gosling visualization object, created using gos
+
+    """
+
+    #  do not need a return value in our case, so set default to ''
+    component_value = _component_func(id=id, spec=spec, height=height, key=key, eventType=eventType, gosAPI=api, default=None, exportButton=exportButton)
 
     return component_value
 

@@ -27,7 +27,7 @@ pip install streamlit
 
 import streamlit as st
 import gosling as gos
-from streamlit_gosling import streamlit_gosling as st_gos
+import streamlit_gosling as st_gos
 
 size = 500
 
@@ -45,7 +45,7 @@ def chart():
     ).properties(width=size, height=size).view()
 
 # wrap gosling visualization as a streamlit component
-st_gos(
+st_gos.from_gos(
     spec=chart(), 
     id='id', 
     height=size+ 100
@@ -59,8 +59,17 @@ st_gos(
 ### st_echarts API
 
 ```
-st_gos(id: string,
-    spec: a gosling visualization object
+from_gos(id: string,
+    spec: a gosling visualization object,
+    height: number,
+    eventType?: 'mouseOver' | 'click' | 'rangeSelect',
+    api?
+)
+```
+
+```
+from_json(id: string,
+    spec: a gosling JSON spec as python dicts
     height: number,
     eventType?: 'mouseOver' | 'click' | 'rangeSelect',
     api?
@@ -68,10 +77,10 @@ st_gos(id: string,
 ```
 
 - **id**: `string`
-- **spec**: a visualization object created using Gosling
+- **spec**: a visualization object created using Gosling or a gosling JSON spec as python dicts
 - **height**: `number`
 - **eventType**: `string`, one of 'mouseOver', 'click', and 'rangeSelect'. If specified, the event data of the specified mouse event will be returned by the streamlit-gosling component.
-- **api**: `object`. Call an api function of the gosling visualization. 
+- **api**: `dict`. Call an api function of the gosling visualization. 
   Three types of api actions are currently supported. 
   ```
   { action: "zoomTo", viewId: string, position: string, padding?: number, duration?: number }
@@ -84,13 +93,13 @@ st_gos(id: string,
   example
   ```python
   import streamlit as st
-  from streamlit_gosling import streamlit_gosling as st_gos
-  
+  from streamlit_gosling as st_gos
+
   # user select a chromosome using streamlit select box
   chr = st.select('zoom to a chromosome', [str(i) for i in range(1, 20)])
 
   # the visaulization will zoom to different chromosome based on users' selection
-  st_gos(
+  st_gos.from_gos(
       spec=/****/, 
       id='id', 
       height=350, 
