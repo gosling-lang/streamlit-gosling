@@ -6,7 +6,8 @@ import gosling as gos
 
 # False while we're developing
 # the component, and True when we're ready to package and distribute it.
-_RELEASE = True
+# _RELEASE = True
+_RELEASE = False
 
 if not _RELEASE:
     _component_func = components.declare_component(
@@ -27,7 +28,7 @@ else:
 # `declare_component` and call it done. The wrapper allows us to customize
 # our component's API: we can pre-process its input args, post-process its
 # output value, and add a docstring for users.
-def streamlit_gosling(id, spec, height = 400, eventType=None, key='gos', exportButton=True):
+def streamlit_gosling(id, spec, api={}, height = 400, eventType=None, key='gos',exportButton=True):
     """Create a new instance of "streamlit_gosling".
 
     Parameters
@@ -40,7 +41,7 @@ def streamlit_gosling(id, spec, height = 400, eventType=None, key='gos', exportB
     """
    
     #  do not need a return value in our case, so set default to ''
-    component_value = _component_func(id=id, spec=spec.to_json(), height=height, key=key, eventType=eventType, default='', exportButton = exportButton)
+    component_value = _component_func(id=id, spec=spec.to_json(), height=height, key=key, eventType=eventType, gosAPI=api, default='', exportButton = exportButton)
 
     return component_value
 
@@ -92,14 +93,13 @@ if not _RELEASE:
      )
 
     chr = st.selectbox(
-     'Select a chromosome', [str(i) for i in range(1, 20)]
+     'zoom to chromosome', [str(i) for i in range(1, 20)]
      )
-
-    
     
     eventType='click'
+    api={'zoomTo': {'viewId': 'track-1', 'position': f'chr{chr}'}}
     
-    result = streamlit_gosling(spec=point_chart(chr, chartType), id='id', height=350, eventType= eventType)
+    result = streamlit_gosling(spec=point_chart(chartType=chartType), id='id', height=350, eventType= eventType, api=api)
 
     
     if result:

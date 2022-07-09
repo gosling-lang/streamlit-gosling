@@ -5,19 +5,24 @@ import {
 } from "streamlit-component-lib"
 import React, { useRef, useEffect } from "react"
 
-import { GoslingComponent, GoslingSpec} from 'gosling.js';
+import { GoslingComponent} from 'gosling.js';
 import { GoslingApi } from 'gosling.js/dist/src/core/api';
 import {GoslingRef} from 'gosling.js/dist/src/core/gosling-component';
 
 import './streamlit-gosling.css'
 
+type GosAPI = {
+  zoomTo?: {viewId: string, position: string, padding?: number, duration?: number},
+  zoomToExtent?: {viewId: string, duration?: number},
+  zoomToGene?: {viewId: string, gene: string, padding?: number, duration?: number}
+}
 interface Props {
   id: string
   spec: string,
   height: number,
-  gosApi: GoslingApi,
   eventType: 'rawData' | 'mouseOver' | 'click' | 'rangeSelect',
-  exportButton: boolean 
+  exportButton: boolean,
+  gosAPI: GosAPI
 }
 
 /**
@@ -25,7 +30,8 @@ interface Props {
  * automatically when your component should be re-rendered.
  */
 const StreamlitGoslingComponent = (props: ComponentProps) => {
-  const { id, spec, height, eventType, exportButton }: Props = props.args
+  const { id, spec, height, eventType, exportButton, gosAPI }: Props = props.args
+  const {zoomTo, zoomToExtent, zoomToGene} = gosAPI 
 
   const gosRef = useRef<GoslingRef>(null)
 
@@ -38,19 +44,60 @@ const StreamlitGoslingComponent = (props: ComponentProps) => {
 
 
 
+  // subscribe event
   useEffect(() => {
-
-    if (gosRef.current && eventType) {
+    const currentRef =  gosRef.current
+    if (currentRef && eventType) {
         
-        gosRef.current.api.subscribe(eventType, (type, eventData) => {
+      currentRef.api.subscribe(eventType, (type, eventData) => {
             Streamlit.setComponentValue(eventData.data);
         });
       
       return () => {
-          gosRef.current?.api.unsubscribe(eventType);
+        currentRef?.api.unsubscribe(eventType);
       };
     }
-  }, [gosRef.current]);
+  }, [gosRef.current, eventType]);
+
+
+  useEffect(()=>{
+    if (gosRef.current && zoomTo) {
+      const {viewId, position, padding, duration} = zoomTo
+      const viewIds = gosRef.current.api.getViewIds()
+      if (viewIds.includes(viewId)){
+        gosRef.current.api.zoomTo(viewId, position, padding, duration)
+      }else {
+        console.warn(`${viewId} does not exist in ${viewIds}`)
+      }
+      
+    }
+  }, [zoomTo])
+
+  useEffect(()=>{
+    const currentRef =  gosRef.current
+    if (currentRef && zoomToExtent) {
+      const {viewId, duration} = zoomToExtent
+      const viewIds = currentRef.api.getViewIds()
+      if (viewIds.includes(viewId)){
+        currentRef.api.zoomToExtent(viewId, duration)
+      }else {
+        console.warn(`${viewId} does not exist in ${viewIds}`)
+      }
+    }
+  }, [zoomToExtent])
+
+  useEffect(()=>{
+    
+    if (gosRef.current && zoomToGene) {
+      const {viewId, gene, padding, duration} = zoomToGene
+      const viewIds = gosRef.current.api.getViewIds()
+      if (viewIds.includes(viewId)){
+        gosRef.current.api.zoomToGene(viewId, gene, padding, duration)
+      }else {
+        console.warn(`${viewId} does not exist in ${viewIds}`)
+      }
+    }
+  }, [zoomToGene])
   
 
 
