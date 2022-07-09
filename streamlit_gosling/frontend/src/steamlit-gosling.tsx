@@ -5,16 +5,23 @@ import {
 } from "streamlit-component-lib"
 import React, { useRef, useEffect } from "react"
 
-import { GoslingComponent} from 'gosling.js';
-import {GoslingRef} from 'gosling.js/dist/src/core/gosling-component';
+import { GoslingComponent } from 'gosling.js';
+import { GoslingRef } from 'gosling.js/dist/src/core/gosling-component';
 
 import './streamlit-gosling.css'
-
-type GosAPI = {
-  zoomTo?: {viewId: string, position: string, padding?: number, duration?: number},
-  zoomToExtent?: {viewId: string, duration?: number},
-  zoomToGene?: {viewId: string, gene: string, padding?: number, duration?: number}
+type ZoomToAPI = {
+  action: "zoomTo", viewId: string, position: string, padding?: number, duration?: number
 }
+
+type ZoomToExtentAPI = {
+  action: "zoomToExtent", viewId: string, duration?: number
+}
+
+type ZoomToGeneAPI = {
+  action: "zoomToGene", viewId: string, gene: string, padding?: number, duration?: number
+}
+type GosAPI = ZoomToAPI | ZoomToExtentAPI | ZoomToGeneAPI
+
 
 interface Props {
   id: string
@@ -22,7 +29,7 @@ interface Props {
   height: number,
   eventType: 'rawData' | 'mouseOver' | 'click' | 'rangeSelect',
   exportButton: boolean,
-  gosAPI: GosAPI
+  gosAPI?: GosAPI
 }
 
 /**
@@ -31,7 +38,6 @@ interface Props {
  */
 const StreamlitGoslingComponent = (props: ComponentProps) => {
   const { id, spec, height, eventType, exportButton, gosAPI }: Props = props.args
-  const {zoomTo, zoomToExtent, zoomToGene} = gosAPI 
 
   const gosRef = useRef<GoslingRef>(null)
 
@@ -46,13 +52,13 @@ const StreamlitGoslingComponent = (props: ComponentProps) => {
 
   // subscribe event
   useEffect(() => {
-    const currentRef =  gosRef.current
+    const currentRef = gosRef.current
     if (currentRef && eventType) {
-        
+
       currentRef.api.subscribe(eventType, (type, eventData) => {
-            Streamlit.setComponentValue(eventData.data);
-        });
-      
+        Streamlit.setComponentValue(eventData.data);
+      });
+
       return () => {
         currentRef?.api.unsubscribe(eventType);
       };
@@ -60,72 +66,56 @@ const StreamlitGoslingComponent = (props: ComponentProps) => {
   }, [gosRef.current, eventType]);
 
 
-  useEffect(()=>{
-    if (gosRef.current && zoomTo) {
-      const {viewId, position, padding, duration} = zoomTo
+  useEffect(() => {
+    if (gosRef.current && gosAPI) {
+      const { viewId, action, duration } = gosAPI
       const viewIds = gosRef.current.api.getViewIds()
-      if (viewIds.includes(viewId)){
-        gosRef.current.api.zoomTo(viewId, position, padding, duration)
-      }else {
-        console.warn(`${viewId} does not exist in ${viewIds}`)
-      }
-      
-    }
-  }, [zoomTo])
+      if (viewIds.includes(viewId)) {
+        if (action === 'zoomTo') {
+          const { position, padding } = gosAPI as ZoomToAPI
+          gosRef.current.api.zoomTo(viewId, position, padding)
+        } else if (action === 'zoomToExtent') {
+          gosRef.current.api.zoomToExtent(viewId, duration)
+        } else if (action === 'zoomToGene') {
+          const { gene, padding } = gosAPI as ZoomToGeneAPI
+          gosRef.current.api.zoomToGene(viewId, gene, padding, duration)
+        } else {
+          console.warn(`action ${action} is not supported`)
+        }
 
-  useEffect(()=>{
-    const currentRef =  gosRef.current
-    if (currentRef && zoomToExtent) {
-      const {viewId, duration} = zoomToExtent
-      const viewIds = currentRef.api.getViewIds()
-      if (viewIds.includes(viewId)){
-        currentRef.api.zoomToExtent(viewId, duration)
-      }else {
+      } else {
         console.warn(`${viewId} does not exist in ${viewIds}`)
       }
-    }
-  }, [zoomToExtent])
 
-  useEffect(()=>{
-    
-    if (gosRef.current && zoomToGene) {
-      const {viewId, gene, padding, duration} = zoomToGene
-      const viewIds = gosRef.current.api.getViewIds()
-      if (viewIds.includes(viewId)){
-        gosRef.current.api.zoomToGene(viewId, gene, padding, duration)
-      }else {
-        console.warn(`${viewId} does not exist in ${viewIds}`)
-      }
     }
-  }, [zoomToGene])
-  
+  }, [gosAPI])
 
 
   return (
     <>
-    <GoslingComponent
-      // Gosling specification
-      ref={gosRef}
-      spec={JSON.parse(spec)}
-      // Styles of Gosling Component
-      margin={0}
-      padding={30}
-      border={'none'}
-      id={id}
-      className={"my-gosling-component-style"}
-      // Styling theme (refer to https://github.com/gosling-lang/gosling-theme)
-      theme={'light'}
-    />
+      <GoslingComponent
+        // Gosling specification
+        ref={gosRef}
+        spec={JSON.parse(spec)}
+        // Styles of Gosling Component
+        margin={0}
+        padding={30}
+        border={'none'}
+        id={id}
+        className={"my-gosling-component-style"}
+        // Styling theme (refer to https://github.com/gosling-lang/gosling-theme)
+        theme={'light'}
+      />
 
-    {exportButton && <div className='export-meun'>
-      Export
-      <div className='sub-meun'>
-        <button onClick={()=>gosRef.current?.api.exportPdf()}>pdf</button>
-        <button onClick={()=>gosRef.current?.api.exportPng()}>png</button>
-      </div>
-    </div>}
+      {exportButton && <div className='export-meun'>
+        Export
+        <div className='sub-meun'>
+          <button onClick={() => gosRef.current?.api.exportPdf()}>pdf</button>
+          <button onClick={() => gosRef.current?.api.exportPng()}>png</button>
+        </div>
+      </div>}
 
-    
+
     </>
   )
 }

@@ -20,7 +20,8 @@ else:
     # build directory:
     parent_dir = os.path.dirname(os.path.abspath(__file__))
     build_dir = os.path.join(parent_dir, "frontend/build")
-    _component_func = components.declare_component("streamlit_gosling", path=build_dir)
+    _component_func = components.declare_component(
+        "streamlit_gosling", path=build_dir)
 
 
 # Create a wrapper function for the component. This is an optional
@@ -28,7 +29,7 @@ else:
 # `declare_component` and call it done. The wrapper allows us to customize
 # our component's API: we can pre-process its input args, post-process its
 # output value, and add a docstring for users.
-def streamlit_gosling(id, spec, api={}, height = 400, eventType=None, key='gos',exportButton=True):
+def from_gos(id, spec, api=None, height=400, eventType=None, key='gos', exportButton=True):
     """Create a new instance of "streamlit_gosling".
 
     Parameters
@@ -39,11 +40,13 @@ def streamlit_gosling(id, spec, api={}, height = 400, eventType=None, key='gos',
     spec: a gosling visualization object, created using gos
 
     """
-   
+
     #  do not need a return value in our case, so set default to ''
-    component_value = _component_func(id=id, spec=spec.to_json(), height=height, key=key, eventType=eventType, gosAPI=api, default=None, exportButton = exportButton)
+    component_value = _component_func(id=id, spec=spec.to_json(
+    ), height=height, key=key, eventType=eventType, gosAPI=api, default=None, exportButton=exportButton)
 
     return component_value
+
 
 if not _RELEASE:
     import streamlit as st
@@ -61,7 +64,7 @@ if not _RELEASE:
             row="sample",
             column="position",
             value="peak",
-            categories=["sample 1","sample 2", "sample 3", "sample 4"],
+            categories=["sample 1", "sample 2", "sample 3", "sample 4"],
             binSize=5,
         )
 
@@ -74,7 +77,8 @@ if not _RELEASE:
             color=gos.Color("sample:N", legend=True),
             tooltip=[
                 gos.Tooltip(field='position', type='genomic'),
-                gos.Tooltip(field='peak', type='quantitative', alt='value', format='.2'),
+                gos.Tooltip(field='peak', type='quantitative',
+                            alt='value', format='.2'),
                 gos.Tooltip(field='sample', type='nominal')
             ],
         ).properties(
@@ -82,10 +86,10 @@ if not _RELEASE:
             title=''
         )
 
-        if chartType=='bar chart':
+        if chartType == 'bar chart':
             track = track.mark_bar()
         elif chartType == 'area chart':
-            track =track.mark_area().encode(row ='sample:N')
+            track = track.mark_area().encode(row='sample:N')
 
         chart = track.view(title='click to select an item')
 
@@ -94,19 +98,20 @@ if not _RELEASE:
     with col1:
 
         chartType = st.selectbox(
-        'Select a chart', ['point plot', 'bar chart', 'area chart']
+            'Select a chart', ['point plot', 'bar chart', 'area chart']
         )
 
         chr = st.selectbox(
-        'zoom to chromosome', [str(i) for i in range(1, 20)]
+            'zoom to chromosome', [str(i) for i in range(1, 20)]
         )
-    
-    eventType='click'
-    api={'zoomTo': {'viewId': 'track-1', 'position': f'chr{chr}'}}
 
-    with col2: 
-    
-        result = streamlit_gosling(spec=point_chart(chartType=chartType), id='id', height=350, eventType= eventType, api=api)
+    eventType = 'click'
+    api = {"action": 'zoomTo', 'viewId': 'track-1', 'position': f'chr{chr}'}
+
+    with col2:
+
+        result = from_gos(spec=point_chart(chartType=chartType),
+                          id='id', height=350, eventType=eventType, api=api)
 
     with col1:
         st.write(f'you {eventType}:', result)
