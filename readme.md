@@ -5,7 +5,7 @@ A Streamlit component to display [Genomic Visualization using Gosling](http://go
 <img src="./assets/demo.gif">
 
 An online demo is host at [Streamlit Clound](https://wangqianwen0418-streamlit-gosling-demo-st-gos-demo-zo60pz.streamlitapp.com/).  
-Checkout the [code of the demo](wangqianwen0418/streamlit-gosling-demo/main/st_gos_demo.py)
+Checkout the [code of the demo](https://github.com/wangqianwen0418/streamlit-gosling-demo/blob/main/st_gos_demo.py)
 
 
 ## Install
