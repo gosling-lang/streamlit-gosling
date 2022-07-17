@@ -7,7 +7,7 @@ def readme() -> str:
     """Utility function to read the README file.
     :return: content of README.md
     """
-    return open(join(dirname(__file__), "README.md")).read()
+    return open(join(dirname(__file__), "readme.md")).read()
 
 
 setuptools.setup(
