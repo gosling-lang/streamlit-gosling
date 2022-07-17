@@ -63,7 +63,7 @@ const StreamlitGoslingComponent = (props: ComponentProps) => {
         currentRef?.api.unsubscribe(eventType);
       };
     }
-  }, [gosRef.current, eventType]);
+  }, [eventType]);
 
 
   useEffect(() => {
