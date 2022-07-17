@@ -3,9 +3,9 @@ name: Test font and back end build
 
 on:
   pull_request:
-    branches: [main]
+    branches: [master]
   push:
-    branches: [main]
+    branches: [master]
 
 permissions:
   contents: read
