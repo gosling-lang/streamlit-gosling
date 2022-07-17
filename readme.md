@@ -106,6 +106,7 @@ st_gos.from_gos(
 from_gos(id: string,
     spec: a gosling visualization object,
     height: number,
+    exportButton: boolean,
     eventType?: 'mouseOver' | 'click' | 'rangeSelect',
     api?
 )
@@ -115,6 +116,7 @@ from_gos(id: string,
 from_json(id: string,
     spec: a gosling JSON spec as python dicts
     height: number,
+    exportButton: boolean,
     eventType?: 'mouseOver' | 'click' | 'rangeSelect',
     api?
 )
@@ -123,6 +125,7 @@ from_json(id: string,
 - **id**: `string`
 - **spec**: a visualization object created using Gosling or a gosling JSON spec as python dicts
 - **height**: `number`
+- **exportButton**: `boolean`, whether to include the export button in the gosling component
 - **eventType**: `string`, one of 'mouseOver', 'click', and 'rangeSelect'. If specified, the event data of the specified mouse event will be returned by the streamlit-gosling component.
 - **api**: ``. Call an api function of the gosling visualization. 
   Three types of api actions are currently supported. 
