@@ -11,7 +11,7 @@ Checkout the [code of the demo](https://github.com/wangqianwen0418/streamlit-gos
 ## Install
 
 ```shell script
-pip install streamlit-gosling
+pip install streamlit-gosling streamlit
 ```
 
 also need to install its dependencies `gosling` and `streamlit`
@@ -25,8 +25,8 @@ pip install streamlit
 
 This library provides 2 functions to display gosling visualization :
 
-- `from_gos` to display visualization created by from a gosling instances
-- `from_json` to display visualization from Golsing JSON spec (in the form Python dict)
+- `from_gos` to display visualization from a gosling instances. Make sure you have `gosling` installed via `pip install gosling`.
+- `from_json` to display visualization from Golsing spec in the form Python dict.
 
 ### using `from_gos`
 ```python
@@ -90,17 +90,19 @@ spec = {
 
 st_gos.from_gos(
     spec=spec, 
-    id='id', 
-    height=size+ 100
+    id='gos_bar', 
+    height= 200
 )
 ```
 
-[docs of gosling python package](https://gosling-lang.github.io/gos)  
-[docs of streamlit](https://docs.streamlit.io/)
+
+- [docs of gosling grammar](http://gosling-lang.org/docs)  
+- [docs of gosling python package](https://gosling-lang.github.io/gos)  
+- [docs of streamlit](https://docs.streamlit.io/)
 
 ## API
 
-### st_echarts API
+### streamlit-gosling API
 
 ```
 from_gos(id: string,
@@ -127,16 +129,14 @@ from_json(id: string,
 - **height**: `number`
 - **exportButton**: `boolean`, whether to include the export button in the gosling component
 - **eventType**: `string`, one of 'mouseOver', 'click', and 'rangeSelect'. If specified, the event data of the specified mouse event will be returned by the streamlit-gosling component.
-- **api**: ``. Call an api function of the gosling visualization. 
+- **api**: Call an api function of the gosling visualization. 
   Three types of api actions are currently supported. 
-  ```
-  { action: "zoomTo", viewId: string, position: string, padding?: number, duration?: number }
+  - `{ action: "zoomTo", viewId: string, position: string, padding?: number, duration?: number }`
+  - `{ action: "zoomToExtent", viewId: string, duration?: number}`
+  - `{ action: "zoomToGene", viewId: string, gene: string, padding?: number, duration?: number }`
 
-  { action: "zoomToExtent", viewId: string, duration?: number}
-    
-  { action: "zoomToGene", viewId: string, gene: string, padding?: number, duration?: number }
   
-  ```
+
   example
   ```python
   import streamlit as st
@@ -145,7 +145,7 @@ from_json(id: string,
   # user select a chromosome using streamlit select box
   chr = st.select('zoom to a chromosome', [str(i) for i in range(1, 20)])
 
-  # the visaulization will zoom to different chromosome based on users' selection
+  # the visaulization will zoom to different chromosome based on users' selection above
   st_gos.from_gos(
       spec=/****/, 
       id='id', 
@@ -185,8 +185,6 @@ npm run start
 ```
 
 - Python side
-
-Demo example is on https://github.com/andfanilo/streamlit-echarts-demo.
 
 ```shell script
 git clone https://github.com/andfanilo/streamlit-echarts-demo
