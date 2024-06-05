@@ -1,34 +1,43 @@
 import {
   Streamlit,
   withStreamlitConnection,
-  ComponentProps
+  ComponentProps,
 } from "streamlit-component-lib"
-import React, { useRef, useEffect } from "react"
+import React, { useRef, useEffect, useMemo } from "react"
 
-import { GoslingComponent } from 'gosling.js';
-import { GoslingRef } from 'gosling.js/dist/src/core/gosling-component';
+import { GoslingComponent } from "gosling.js"
+import { GoslingRef } from "gosling.js/dist/src/core/gosling-component"
 
-import './streamlit-gosling.css'
+import "./streamlit-gosling.css"
 type ZoomToAPI = {
-  action: "zoomTo", viewId: string, position: string, padding?: number, duration?: number
+  action: "zoomTo"
+  viewId: string
+  position: string
+  padding?: number
+  duration?: number
 }
 
 type ZoomToExtentAPI = {
-  action: "zoomToExtent", viewId: string, duration?: number
+  action: "zoomToExtent"
+  viewId: string
+  duration?: number
 }
 
 type ZoomToGeneAPI = {
-  action: "zoomToGene", viewId: string, gene: string, padding?: number, duration?: number
+  action: "zoomToGene"
+  viewId: string
+  gene: string
+  padding?: number
+  duration?: number
 }
 type GosAPI = ZoomToAPI | ZoomToExtentAPI | ZoomToGeneAPI
 
-
 interface Props {
   id: string
-  spec: string,
-  height: number,
-  eventType: 'rawData' | 'mouseOver' | 'click' | 'rangeSelect',
-  exportButton: boolean,
+  spec: string
+  height: number
+  eventType: "rawData" | "mouseOver" | "click" | "rangeSelect"
+  exportButton: boolean
   gosAPI?: GosAPI
 }
 
@@ -37,7 +46,8 @@ interface Props {
  * automatically when your component should be re-rendered.
  */
 const StreamlitGoslingComponent = (props: ComponentProps) => {
-  const { id, spec, height, eventType, exportButton, gosAPI }: Props = props.args
+  const { id, spec, height, eventType, exportButton, gosAPI }: Props =
+    props.args
 
   const gosRef = useRef<GoslingRef>(null)
 
@@ -45,54 +55,56 @@ const StreamlitGoslingComponent = (props: ComponentProps) => {
   // otherwise, the height of iframe is 0
   useEffect(() => {
     Streamlit.setFrameHeight(height)
-  });
-
-
-
+  })
 
   // subscribe event
   useEffect(() => {
     const currentRef = gosRef.current
     if (currentRef && eventType) {
-
       currentRef.api.subscribe(eventType, (type, eventData) => {
-        Streamlit.setComponentValue(eventData.data);
-      });
+        Streamlit.setComponentValue(eventData.data)
+      })
 
       return () => {
-        currentRef?.api.unsubscribe(eventType);
-      };
+        currentRef?.api.unsubscribe(eventType)
+      }
     }
-  }, [eventType]);
-
+  }, [eventType])
 
   useEffect(() => {
-    if (gosRef.current && gosAPI) {
-      const { viewId, action, duration } = gosAPI
-      const viewIds = gosRef.current.api.getViews().map(v => v.id)
-      if (viewIds.includes(viewId)) {
-        if (action === 'zoomTo') {
-          const { position, padding } = gosAPI as ZoomToAPI
-          gosRef.current.api.zoomTo(viewId, position, padding)
-        } else if (action === 'zoomToExtent') {
-          gosRef.current.api.zoomToExtent(viewId, duration)
-        } else if (action === 'zoomToGene') {
-          const { gene, padding } = gosAPI as ZoomToGeneAPI
-          gosRef.current.api.zoomToGene(viewId, gene, padding, duration)
+    setTimeout(() => {
+      if (gosRef.current && gosAPI) {
+        const { viewId, action, duration } = gosAPI
+        const viewIds = gosRef.current.api.getTrackIds()
+        console.warn("viewIds", viewIds)
+        if (viewIds.includes(viewId)) {
+          if (action === "zoomTo") {
+            const { position, padding } = gosAPI as ZoomToAPI
+            console.warn("zoomTo ", viewId, position, padding)
+            gosRef.current.api.zoomTo(viewId, position, padding, duration)
+            // FIXME: This is a workaround to fix the zoomTo issue
+            // The zoomTo function is not working properly when it is called immediately. I believe it is 
+            // a problem in the higlass zoomTo API
+            setTimeout(() => {
+              gosRef.current?.api.zoomTo(viewId, position, padding, duration)
+            }, 150)
+          } else if (action === "zoomToExtent") {
+            gosRef.current.api.zoomToExtent(viewId, duration)
+          } else if (action === "zoomToGene") {
+            const { gene, padding } = gosAPI as ZoomToGeneAPI
+            gosRef.current.api.zoomToGene(viewId, gene, padding, duration)
+          } else {
+            console.warn(`action ${action} is not supported`)
+          }
         } else {
-          console.warn(`action ${action} is not supported`)
+          console.warn(`${viewId} does not exist in ${viewIds}`)
         }
-
-      } else {
-        console.warn(`${viewId} does not exist in ${viewIds}`)
       }
-
-    }
+    }, 100)
   }, [gosAPI])
 
-
-  return (
-    <>
+  const goslingComponent = useMemo(
+    () => (
       <GoslingComponent
         // Gosling specification
         ref={gosRef}
@@ -100,22 +112,28 @@ const StreamlitGoslingComponent = (props: ComponentProps) => {
         // Styles of Gosling Component
         margin={0}
         padding={30}
-        border={'none'}
+        border={"none"}
         id={id}
         className={"my-gosling-component-style"}
         // Styling theme (refer to https://github.com/gosling-lang/gosling-theme)
-        theme={'light'}
+        theme={"light"}
       />
+    ),
+    [spec, gosRef]
+  )
 
-      {exportButton && <div className='export-meun'>
-        Export
-        <div className='sub-meun'>
-          <button onClick={() => gosRef.current?.api.exportPdf()}>pdf</button>
-          <button onClick={() => gosRef.current?.api.exportPng()}>png</button>
+  return (
+    <>
+      {goslingComponent}
+      {exportButton && (
+        <div className="export-meun">
+          Export
+          <div className="sub-meun">
+            <button onClick={() => gosRef.current?.api.exportPdf()}>pdf</button>
+            <button onClick={() => gosRef.current?.api.exportPng()}>png</button>
+          </div>
         </div>
-      </div>}
-
-
+      )}
     </>
   )
 }
