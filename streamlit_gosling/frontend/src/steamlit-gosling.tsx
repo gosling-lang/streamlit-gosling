@@ -83,8 +83,7 @@ const StreamlitGoslingComponent = (props: ComponentProps) => {
             console.warn("zoomTo ", viewId, position, padding)
             gosRef.current.api.zoomTo(viewId, position, padding, duration)
             // FIXME: This is a workaround to fix the zoomTo issue
-            // The zoomTo function is not working properly when it is called immediately. I believe it is 
-            // a problem in the higlass zoomTo API
+            // The zoomTo function is not working properly when it is called immediately. 
             setTimeout(() => {
               gosRef.current?.api.zoomTo(viewId, position, padding, duration)
             }, 150)
