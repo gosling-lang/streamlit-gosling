@@ -69,7 +69,7 @@ const StreamlitGoslingComponent = (props: ComponentProps) => {
   useEffect(() => {
     if (gosRef.current && gosAPI) {
       const { viewId, action, duration } = gosAPI
-      const viewIds = gosRef.current.api.getViewIds()
+      const viewIds = gosRef.current.api.getViews().map(v => v.id)
       if (viewIds.includes(viewId)) {
         if (action === 'zoomTo') {
           const { position, padding } = gosAPI as ZoomToAPI
