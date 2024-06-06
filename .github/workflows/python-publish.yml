@@ -21,14 +21,14 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [14.x, 15.x, 16.x]
-        python-version: ['3.7', '3.8', '3.9']
+        node-version: [17.x, 18.x]
+        python-version: ['3.9', '3.10', '3.11']
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: 'true'
       - name: setup node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       - name: npm Build
