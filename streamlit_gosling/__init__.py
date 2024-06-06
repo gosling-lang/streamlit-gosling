@@ -76,7 +76,7 @@ if not _RELEASE:
     st.header('Streamlit-Gosling')
     col1, col2 = st.columns([1, 3])
 
-    @st.cache
+    @st.cache_data
     def point_chart(chr='1', chartType='point chart'):
         data = gos.multivec(
             url="https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ",

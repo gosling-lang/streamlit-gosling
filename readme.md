@@ -156,19 +156,21 @@ from_json(id: string,
 
 ## Development
 
+Make sure `_RELEASE = False` in streamlit_gosling/__init__.py
+
 ### Install
 
 - JS side
 
 ```shell script
-cd frontend
+cd streamlit_gosling/frontend
 npm install
 ```
 
 - Python side
 
 ```shell script
-conda create -n streamlit-gosling python=3.7
+conda create -n streamlit-gosling python=3.9
 conda activate streamlit-gosling
 pip install -e .
 ```
@@ -187,10 +189,16 @@ npm run start
 - Python side
 
 ```shell script
-git clone https://github.com/andfanilo/streamlit-echarts-demo
-cd streamlit-echarts-demo/
-streamlit run app.py
+streamlit run streamlit_gosling/__init__.py
 ```
+
+## Publish
+1. set `_RELEASE = True` in __init__.py
+
+2. check the version number in setup.py
+
+3. run `./publish-script.sh`
+
 
 <!-- ## Static HTML file
 If you only need static rendering of gosling, with no communication from Gosling back to Streamlit, then you may not need `streamlit-gosling`.
