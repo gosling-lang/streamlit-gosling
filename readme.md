@@ -11,14 +11,9 @@ Checkout the [code of the demo](https://github.com/wangqianwen0418/streamlit-gos
 ## Install
 
 ```shell script
-pip install streamlit-gosling streamlit
+pip install streamlit gosling streamlit-gosling 
 ```
 
-also need to install its dependencies `gosling` and `streamlit`
-```
-pip install gosling
-pip install streamlit
-```
 
 
 ## Usage
