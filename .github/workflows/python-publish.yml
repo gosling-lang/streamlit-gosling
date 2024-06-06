@@ -25,6 +25,8 @@ jobs:
         python-version: ['3.9', '3.10', '3.11']
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: false
       - name: setup node
         uses: actions/setup-node@v4
         with:
