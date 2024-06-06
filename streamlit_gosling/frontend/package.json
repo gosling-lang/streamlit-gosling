@@ -1,6 +1,6 @@
 {
   "name": "streamlit-gosling",
-  "version": "0.1.0",
+  "version": "0.1.4",
   "private": true,
   "dependencies": {
     "gosling.js": "^0.17.0",

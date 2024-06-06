@@ -192,14 +192,16 @@ npm run start
 streamlit run streamlit_gosling/__init__.py
 ```
 
-## Publish
+## Test Before Publish to PYPI
 1. set `_RELEASE = True` in __init__.py
 
 2. check the version number in setup.py
 
-3. run `./publish-script.sh`
+3. run `. publish-script.sh`
 
+4. answer `yes` for uploading to test.pypi for testing. `twine` will prompt you for a username and password. For the username, use `__token__`. For the password, use API token.
 
+5. download and test `pip install --index-url https://test.pypi.org/simple/ --no-deps streamlit-gosling`
 <!-- ## Static HTML file
 If you only need static rendering of gosling, with no communication from Gosling back to Streamlit, then you may not need `streamlit-gosling`.
 Using  `components.html` will be the easiest way.
