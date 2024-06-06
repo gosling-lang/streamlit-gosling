@@ -118,7 +118,7 @@ const StreamlitGoslingComponent = (props: ComponentProps) => {
         theme={"light"}
       />
     ),
-    [spec, gosRef]
+    [spec, gosRef, id]
   )
 
   return (
