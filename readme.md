@@ -34,7 +34,7 @@ size = 500
 
 
 # create visualization using gosling
-@st.cache
+@st.cache_data
 def chart():
     data = gos.matrix("https://server.gosling-lang.org/api/v1/tileset_info/?d=leung2015-hg38")
     return gos.Track(data).mark_bar().encode(
